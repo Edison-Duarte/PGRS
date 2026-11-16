@@ -373,7 +373,7 @@ def gerar_pdf_pgrs(dados, protocolo):
 
 
 # --- INTERFACE DO USUÁRIO (STREAMLIT) ---
-st.title("♻️ Sistema Elaborador de PGRS")
+st.title("♻️ PGRS Maker Sys")
 st.markdown(
     "Preencha todas as etapas abaixo. Ao final, clique em **Gerar PGRS** para registrar os dados na planilha e baixar o documento oficial em PDF."
 )
