@@ -541,35 +541,40 @@ with abas[3]:
 # --- BOTÃO FINAL DE GERAÇÃO ---
 st.markdown("---")
 if st.button("🚀 Gerar PGRS", type="primary", use_container_width=True):
-  # Validação básica dos campos essenciais
-  if (
-      not razao_social
-      or not cnpj
-      or not rt_nome
-      or not lista_residuos[0]["nome"]
-  ):
+  # Verifica individualmente o que está vazio (usando .strip() para evitar espaços)
+  campos_faltantes = []
+  if not razao_social.strip():
+    campos_faltantes.append("Razão Social (Aba 1)")
+  if not cnpj.strip():
+    campos_faltantes.append("CNPJ (Aba 1)")
+  if not rt_nome.strip():
+    campos_faltantes.append("Nome do Responsável Técnico (Aba 1)")
+  if not lista_residuos or not lista_residuos[0]["nome"].strip():
+    campos_faltantes.append("Nome do Resíduo #1 (Aba 3)")
+
+  if campos_faltantes:
     st.error(
-        "Por favor, preencha os campos obrigatórios marcados com * (Razão Social, CNPJ, Responsável Técnico e pelo menos um Resíduo)."
+        f"⚠️ O sistema identificou os seguintes campos obrigatórios vazios: **{', '.join(campos_faltantes)}**.\n\n*Dica: Após digitar no último campo de uma aba, clique fora da caixa de texto antes de mudar de aba ou clicar em Gerar.*"
     )
   else:
     dados_completos = {
-        "razao_social": razao_social,
-        "nome_fantasia": nome_fantasia,
-        "cnpj": cnpj,
-        "cnae": cnae,
-        "endereco": endereco,
-        "coordenadas": coordenadas,
-        "responsavel_legal": responsavel_legal,
-        "rt_nome": rt_nome,
-        "rt_formacao": rt_formacao,
-        "rt_registro": rt_registro,
-        "rt_art": rt_art,
-        "num_funcionarios": num_funcionarios,
-        "descricao_atividade": descricao_atividade,
+        "razao_social": razao_social.strip(),
+        "nome_fantasia": nome_fantasia.strip(),
+        "cnpj": cnpj.strip(),
+        "cnae": cnae.strip(),
+        "endereco": endereco.strip(),
+        "coordenadas": coordenadas.strip(),
+        "responsavel_legal": responsavel_legal.strip(),
+        "rt_nome": rt_nome.strip(),
+        "rt_formacao": rt_formacao.strip(),
+        "rt_registro": rt_registro.strip(),
+        "rt_art": rt_art.strip(),
+        "num_funcionarios": num_funcionarios.strip(),
+        "descricao_atividade": descricao_atividade.strip(),
         "residuos": lista_residuos,
-        "armazenamento_local": armazenamento_local,
-        "acoes_minimizacao": acoes_minimizacao,
-        "plano_emergencia": plano_emergencia,
+        "armazenamento_local": armazenamento_local.strip(),
+        "acoes_minimizacao": acoes_minimizacao.strip(),
+        "plano_emergencia": plano_emergencia.strip(),
     }
 
     try:
@@ -583,7 +588,7 @@ if st.button("🚀 Gerar PGRS", type="primary", use_container_width=True):
           f"✅ PGRS gerado e registrado com sucesso! Protocolo: **{protocolo_gerado}**"
       )
 
-      nome_arquivo = f"PGRS_{razao_social.replace(' ', '_')}_{protocolo_gerado}.pdf"
+      nome_arquivo = f"PGRS_{razao_social.strip().replace(' ', '_')}_{protocolo_gerado}.pdf"
       st.download_button(
           label="📥 Baixar Documento PGRS (.PDF)",
           data=pdf_final,
